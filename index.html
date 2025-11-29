@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام كشف سرقة البنزين - مصنع البهنساوي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Arial Unicode MS';
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container-main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+        }
+        .header-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header-title h1 {
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        .header-title p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .btn-custom {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 700;
+            color: #333;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .form-label i {
+            margin-left: 8px;
+            color: #667eea;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .table thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        .table tbody td {
+            padding: 12px 15px;
+            border: none;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+        .table tbody tr:hover {
+            background-color: #f5f7ff;
+            transform: scale(1.01);
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .stat-card h5 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .delete-btn {
+            cursor: pointer;
+            color: #dc3545;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 5px;
+        }
+        .delete-btn:hover {
+            color: white;
+            background-color: #dc3545;
+            font-weight: bold;
+            transform: scale(1.1);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+        .tabs-container {
+            margin-bottom: 30px;
+        }
+        .nav-tabs .nav-link {
+            color: white;
+            border: none;
+            font-weight: 500;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: white;
+            color: #667eea;
+            border: none;
+        }
+        .success-message {
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .consumption-info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+        .consumption-info input {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .theft-highlight {
+            background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
+            font-weight: bold;
+            color: #b71c1c;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+        .report-header h2 {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .report-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            font-size: 0.95rem;
+            color: #666;
+        }
+        @media print {
+            body {
+                background: white;
+            }
+            .card {
+                page-break-inside: avoid;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-main">
+        <!-- Header -->
+        <div class="header-title">
+            <h1><i class="bi bi-fuel-pump"></i> نظام كشف سرقة البنزين</h1>
+            <p>مصنع البهنساوي</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-pencil-square"></i> إدخال البيانات</h3>
+            </div>
+            <div class="card-body">
+                <!-- Consumption Rate -->
+                <div class="consumption-info">
+                    <label class="form-label"><i class="bi bi-info-circle"></i> معدل الاستهلاك المتوقع</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="consumptionRate" value="7.5" step="0.1">
+                                <span class="input-group-text">كيلومتر / لتر</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Entry Form -->
+                <form id="entryForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-car-front"></i>رقم العربية</label>
+                            <input type="text" class="form-control" id="vehicleNumber" placeholder="مثال: س 123" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-person-circle"></i>اسم السائق</label>
+                            <input type="text" class="form-control" id="driverName" placeholder="أدخل اسم السائق" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-calendar-range"></i>من التاريخ</label>
+                            <input type="date" class="form-control" id="dateFrom" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-calendar"></i>إلى التاريخ</label>
+                            <input type="date" class="form-control" id="dateTo" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-fuel-pump"></i>الليترات المستخدمة</label>
+                            <input type="number" class="form-control" id="fuelUsed" step="0.01" placeholder="أدخل عدد الليترات" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-coin"></i>سعر السولار (جنيه/لتر)</label>
+                            <input type="number" class="form-control" id="fuelPrice" step="0.01" placeholder="سعر اللتر" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-speedometer"></i>المسافة (كيلومتر)</label>
+                            <input type="number" class="form-control" id="distance" step="0.01" placeholder="المسافة المقطوعة" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-bootstrap-reboot"></i>عدد التفويلات</label>
+                            <input type="number" class="form-control" id="refills" placeholder="عدد مرات التفويل" required>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons no-print">
+                        <button type="submit" class="btn btn-primary btn-custom" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                            <i class="bi bi-plus-circle"></i> إضافة سجل جديد
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-custom" style="background-color: #6c757d; border: none;">
+                            <i class="bi bi-arrow-counterclockwise"></i> مسح البيانات
+                        </button>
+                    </div>
+                </form>
+
+                <div class="alert alert-success success-message" role="alert" style="border-left: 4px solid #28a745; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px;">
+                    <i class="bi bi-check-circle" style="color: #28a745; font-weight: bold;"></i> <strong>✓ تم إضافة السجل بنجاح!</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-bar-chart-fill"></i> الإحصائيات والتحليلات</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>إجمالي السجلات</h5>
+                            <div class="number" id="totalRecords">0</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>إجمالي الليترات المسروقة</h5>
+                            <div class="number" id="totalStolenLiters">0</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>إجمالي الفلوس المسروقة</h5>
+                            <div class="number" id="totalStolenMoney">0 ج</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>عدد السائقين</h5>
+                            <div class="number" id="totalDrivers">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); padding: 20px; border-radius: 10px; border-right: 5px solid #dc3545;">
+                            <h5 style="color: #c62828; margin-bottom: 15px; font-weight: 700;"><i class="bi bi-exclamation-triangle-fill"></i> ⚠️ السائق الأكثر سرقة</h5>
+                            <div style="font-size: 1.1rem; padding: 15px; background: white; border-radius: 8px; border: 2px solid #dc3545;">
+                                <div style="margin-bottom: 10px;">
+                                    <strong style="color: #333;">الاسم:</strong> 
+                                    <span id="topThiefName" style="font-size: 1.2rem; font-weight: bold; color: #c62828;">-</span>
+                                </div>
+                                <div style="margin-top: 8px; border-top: 2px solid #ffebee; padding-top: 10px;">
+                                    <strong style="color: #333;">إجمالي السرقة:</strong> 
+                                    <span id="topThiefAmount" style="color: #b71c1c; font-weight: bold; font-size: 1.3rem;">0 ج</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-table"></i> جدول السجلات</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" style="margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 5%;">#</th>
+                                <th style="text-align: center; width: 10%;">رقم العربية</th>
+                                <th style="text-align: center; width: 12%;">السائق</th>
+                                <th style="text-align: center; width: 15%;">المدة</th>
+                                <th style="text-align: center; width: 10%;">الليترات الإجمالي</th>
+                                <th style="text-align: center; width: 10%;">المسافة (كم)</th>
+                                <th style="text-align: center; width: 8%;">التفويلات</th>
+                                <th style="text-align: center; width: 10%;">المتوقعة</th>
+                                <th style="text-align: center; width: 10%;">المسروقة</th>
+                                <th style="text-align: center; width: 10%;">القيمة</th>
+                                <th style="text-align: center; width: 8%;" class="no-print">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+                <p id="emptyMessage" class="text-center text-muted mt-4" style="padding: 40px 0;">
+                    <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i><br>
+                    <strong>لا توجد سجلات حتى الآن</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-file-earmark-pdf"></i> التقارير والطباعة</h3>
+            </div>
+            <div class="card-body">
+                <div class="action-buttons no-print">
+                    <button class="btn btn-custom" id="printBtn" style="background-color: #17a2b8; color: white; border: none;">
+                        <i class="bi bi-printer-fill"></i> طباعة التقرير
+                    </button>
+                    <button class="btn btn-custom" id="exportPdfBtn" style="background-color: #dc3545; color: white; border: none;">
+                        <i class="bi bi-file-pdf-fill"></i> تنزيل PDF
+                    </button>
+                    <button class="btn btn-custom" id="exportExcelBtn" style="background-color: #28a745; color: white; border: none;">
+                        <i class="bi bi-file-earmark-excel-fill"></i> تنزيل Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

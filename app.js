@@ -105,6 +105,7 @@ function renderTable() {
             <td style="text-align: center;">${record.driverName}</td>
             <td style="text-align: center; font-size: 0.9rem;">${formatDateRange(record.dateFrom, record.dateTo)}</td>
             <td style="text-align: center; font-weight: 500;">${record.fuelUsed.toFixed(2)}</td>
+            <td style="text-align: center; font-weight: 500;">${(record.fuelUsed * record.fuelPrice).toFixed(2)} ج</td>
             <td style="text-align: center;">${record.distance.toFixed(2)}</td>
             <td style="text-align: center; font-weight: 600;">${record.refills}</td>
             <td style="text-align: center;">${record.expectedConsumption.toFixed(2)}</td>
@@ -188,10 +189,12 @@ function generatePdfContent() {
     const totalDistance = records.reduce((sum, r) => sum + r.distance, 0);
     const totalRefills = records.reduce((sum, r) => sum + r.refills, 0);
     const totalExpectedConsumption = records.reduce((sum, r) => sum + r.expectedConsumption, 0);
+    const totalFuelValue = records.reduce((sum, r) => sum + (r.fuelUsed * r.fuelPrice), 0);
 
     let html = `
-        <div style="direction: rtl; font-family: Arial, sans-serif; padding: 2px;">
-            <div style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 10px; margin-bottom: 8px; color: white;">
+        <div style="direction: rtl; font-family: 'Cairo', Arial, sans-serif; padding: 2px;">
+            <div style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 10px; margin-bottom: 8px; color: white; position: relative;">
+                <img src="5.jpg" style="height:60px; display:block; margin:0 auto 8px; border-radius:6px; object-fit:cover;">
                 <h1 style="margin: 0; font-size: 18px; font-weight: bold;">📋 تقرير كشف اهدار البنزين - مصنع البهنساوي</h1>
                 <p style="margin: 3px 0 0 0; font-size: 11px;">📅 ${new Date().toLocaleDateString('ar-EG', {year: 'numeric', month: 'long', day: 'numeric'})} | ⛽ معدل الاستهلاك: ${consumptionRateInput.value} كم/لتر</p>
             </div>
@@ -204,6 +207,7 @@ function generatePdfContent() {
                         <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">السائق</th>
                         <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">المدة</th>
                         <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">الإجمالي(لتر)</th>
+                        <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">قيمة الإجمالي (ج)</th>
                         <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">المسافة(كم)</th>
                         <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">التفويلات</th>
                         <th style="padding: 5px; text-align: center; border: 1px solid #555; font-weight: bold;">المتوقع</th>
@@ -219,6 +223,7 @@ function generatePdfContent() {
                             <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-size: 11px;">${record.driverName}</td>
                             <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-size: 10px;">${formatDateRange(record.dateFrom, record.dateTo)}</td>
                             <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-weight: 600; font-size: 11px;">${record.fuelUsed.toFixed(2)}</td>
+                            <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-weight: 600; font-size: 11px;">${(record.fuelUsed * record.fuelPrice).toFixed(2)} ج</td>
                             <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-size: 11px;">${record.distance.toFixed(2)}</td>
                             <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-weight: 600; font-size: 11px;">${record.refills}</td>
                             <td style="padding: 5px; text-align: center; border: 1px solid #ddd; font-size: 11px;">${record.expectedConsumption.toFixed(2)}</td>
@@ -232,6 +237,7 @@ function generatePdfContent() {
                         <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px;"></td>
                         <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px;"></td>
                         <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px; color: #667eea;">${totalFuelUsed.toFixed(2)}</td>
+                        <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px; color: #667eea;">${totalFuelValue.toFixed(2)}</td>
                         <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px; color: #667eea;">${totalDistance.toFixed(2)}</td>
                         <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px; color: #667eea;">${totalRefills}</td>
                         <td style="padding: 5px; text-align: center; border: 1px solid #555; font-size: 11px; color: #667eea;">${totalExpectedConsumption.toFixed(2)}</td>
@@ -321,7 +327,7 @@ function exportToExcel() {
         ['معدل الاستهلاك المتوقع:', consumptionRateInput.value, 'كيلومتر / لتر'],
         ['تاريخ التقرير:', new Date().toLocaleDateString('ar-EG')],
         [''],
-        ['#', 'رقم العربية', 'اسم السائق', 'المدة', 'الليترات الإجمالي', 'المسافة (كم)', 'عدد التفويلات', 'الليترات المتوقعة', 'الليترات المسروقة', 'قيمة السرقة (جنيه)']
+        ['#', 'رقم العربية', 'اسم السائق', 'المدة', 'الليترات الإجمالي', 'قيمة الإجمالي (ج)', 'المسافة (كم)', 'عدد التفويلات', 'الليترات المتوقعة', 'الليترات المسروقة', 'قيمة السرقة (جنيه)']
     ];
 
     records.forEach((record, index) => {
@@ -331,6 +337,7 @@ function exportToExcel() {
             record.driverName,
             formatDateRange(record.dateFrom, record.dateTo),
             record.fuelUsed.toFixed(2),
+            (record.fuelUsed * record.fuelPrice).toFixed(2),
             record.distance.toFixed(2),
             record.refills,
             record.expectedConsumption.toFixed(2),
@@ -341,18 +348,20 @@ function exportToExcel() {
 
     const totalStolenLiters = records.reduce((sum, r) => sum + (r.stolenLiters > 0 ? r.stolenLiters : 0), 0);
     const totalStolenMoney = records.reduce((sum, r) => sum + (r.stolenMoney > 0 ? r.stolenMoney : 0), 0);
+    const totalFuelValue = records.reduce((sum, r) => sum + (r.fuelUsed * r.fuelPrice), 0);
 
     data.push([]);
     data.push(['الملخص الإجمالي:']);
     data.push(['إجمالي عدد السجلات:', records.length]);
-    data.push(['إجمالي الليترات المسروقة:', totalStolenLiters.toFixed(2)]);
+    data.push(['إجمالي الليترات المسروحة:', totalStolenLiters.toFixed(2)]);
     data.push(['إجمالي قيمة السرقة (جنيه):', totalStolenMoney.toFixed(2)]);
+    data.push(['إجمالي قيمة كل الليترات (جنيه):', totalFuelValue.toFixed(2)]);
     data.push(['عدد السائقين:', new Set(records.map(r => r.driverName)).size]);
     data.push(['']);
     data.push(['تحت إشراف: احمد عصام']);
 
     const ws = XLSX.utils.aoa_to_sheet(data);
-    ws['!colWidths'] = [5, 15, 18, 25, 18, 15, 15, 18, 18, 20];
+    ws['!colWidths'] = [5, 15, 18, 25, 18, 18, 15, 15, 18, 18, 20];
 
     for (let i = 0; i < data.length; i++) {
         const cellRef = 'A' + (i + 1);
@@ -387,9 +396,10 @@ function printReport() {
         <html lang="ar" dir="rtl">
         <head>
             <meta charset="UTF-8">
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
             <title>تقرير سرقة البنزين</title>
             <style>
-                * { font-family: Arial, sans-serif; }
+                * { font-family: 'Cairo', Arial, sans-serif; }
                 body { padding: 20px; direction: rtl; background: white; }
                 table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
                 th { padding: 10px; text-align: center; border: 1px solid #555; font-weight: bold; font-size: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
